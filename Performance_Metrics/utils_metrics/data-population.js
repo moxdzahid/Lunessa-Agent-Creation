@@ -89,41 +89,125 @@ function populateAgentInfo(agent) {
 }
 
 // ============================================================
-// Services
+// SERVICES WITH PAGINATION + EXPAND (3×3 GRID)
 // ============================================================
+
+let currentServiceIndex = 0;
+const SERVICES_PER_PAGE = 9;
+let currentServicesData = [];
+let currentServiceExpandedIndex = null;
+
 function populateServices(agent) {
+    currentServicesData = agent.agentBasicDetails.items || [];  
+    renderServicesBatch(0);
+
+    const loadMoreBtn = document.getElementById("servicesLoadMoreBtn");
+
+    if (loadMoreBtn) {
+        loadMoreBtn.onclick = function () {
+            const nextIndex = currentServiceIndex + SERVICES_PER_PAGE;
+
+            if (nextIndex >= currentServicesData.length) {
+                loadMoreBtn.disabled = true;
+                loadMoreBtn.textContent = "No More Services";
+                return;
+            }
+
+            renderServicesBatch(nextIndex);
+        };
+    }
+}
+
+function renderServicesBatch(startIndex) {
     const grid = document.getElementById("servicesGrid");
     if (!grid) return;
-    const services = agent.agentBasicDetails.items || [];
 
-    grid.innerHTML = services
-        .map(
-            s => `
-        <div class="service-card">
-            <div class="service-header">
-                <h3>${s.itemName}</h3>
-                <span class="service-code">${s.itemCode}</span>
+    const endIndex = Math.min(startIndex + SERVICES_PER_PAGE, currentServicesData.length);
+    const batch = currentServicesData.slice(startIndex, endIndex);
+
+    currentServiceIndex = startIndex;
+
+    grid.innerHTML = `
+        <div class="services-compact-grid">
+            ${batch
+                .map((service, i) => {
+                    const idx = startIndex + i;
+                    return `
+                        <div class="service-mini-card" id="service-card-${idx}">
+                            <div class="service-mini-header">
+                                <span class="service-mini-title">${service.itemName}</span>
+                                <button class="service-mini-expand-btn"
+                                        onclick="toggleServiceDetails(${idx})">
+                                    <svg width="14" height="14" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </button>
+                            </div>
+                            <span class="service-mini-code">${service.itemCode}</span>
+                        </div>
+                    `;
+                })
+                .join("")}
+        </div>
+    `;
+}
+
+function toggleServiceDetails(index) {
+    const grid = document.querySelector(".services-compact-grid");
+
+    // Remove previous expanded section
+    const existing = document.getElementById("service-expanded-details");
+    if (existing) existing.remove();
+
+    // Collapse if same row pressed again
+    if (currentServiceExpandedIndex === index) {
+        currentServiceExpandedIndex = null;
+        return;
+    }
+
+    const service = currentServicesData[index];
+    const cards = Array.from(grid.querySelectorAll(".service-mini-card"));
+
+    const groupStart = Math.floor(index / 3) * 3;
+    const groupEnd = Math.min(groupStart + 2, cards.length - 1);
+
+    const targetCard = cards[groupEnd];
+
+    const details = document.createElement("div");
+    details.id = "service-expanded-details";
+    details.className = "service-expanded-panel";
+
+    details.innerHTML = `
+        <div class="service-expanded-wrapper">
+            <h3>${service.itemName}</h3>
+            <p class="exp-desc">${service.itemInitialWorkingExplanation}</p>
+
+            <div class="exp-steps">
+                <h4>Process Steps</h4>
+                <ul>
+                    ${service.itemRunningSteps.map(step => `<li>${step}</li>`).join("")}
+                </ul>
             </div>
-            <p class="service-description">${s.itemInitialWorkingExplanation}</p>
-            <div class="service-steps">
-                <h4>Process Steps:</h4>
-                <ul>${s.itemRunningSteps.map(step => `<li>${step}</li>`).join("")}</ul>
-            </div>
-            <div class="common-problems">
-                <h4>Common Solutions:</h4>
-                ${s.commonProblemsSolutions
+
+            <div class="exp-problems">
+                <h4>Common Problems & Solutions</h4>
+                ${service.commonProblemsSolutions
                     .map(
-                        sol => `
-                    <div class="problem-solution">
-                        <strong>Problem:</strong> ${sol.problem}<br>
-                        <strong>Solution:</strong> ${sol.solution}
+                        p => `
+                    <div class="exp-problem-box">
+                        <strong>Problem:</strong> ${p.problem}<br>
+                        <strong>Solution:</strong> ${p.solution}
                     </div>`
                     )
                     .join("")}
             </div>
-        </div>`
-        )
-        .join("");
+        </div>
+    `;
+
+    targetCard.insertAdjacentElement("afterend", details);
+    currentServiceExpandedIndex = index;
 }
 
 // ============================================================

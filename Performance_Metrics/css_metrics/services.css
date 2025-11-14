@@ -16,71 +16,85 @@
     gap: 2rem;
 }
 
-.service-card {
-    background: rgba(244, 244, 245, 0.05);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 2rem;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+/* --- Compact Services Grid (3×3) --- */
+.services-compact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
 }
 
+/* Mini service card */
+.service-mini-card {
+    background: rgba(240, 240, 255, 0.05);
+    border: 1px solid rgba(120, 120, 255, 0.2);
+    padding: 1rem;
+    border-radius: 12px;
+    transition: .3s;
+}
 
-.service-header {
+.service-mini-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+}
+
+.service-mini-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.service-mini-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.service-mini-code {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: 0.4rem;
+}
+
+/* Expand Button */
+.service-mini-expand-btn {
+    background: rgba(120, 120, 255, 0.1);
+    border: 1px solid rgba(120, 120, 255, 0.3);
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 0.2rem;
+    transition: 0.3s;
+}
+
+.service-mini-expand-btn:hover {
+    background: rgba(120, 120, 255, 0.2);
+}
+
+/* Expanded section */
+.service-expanded-panel {
+    grid-column: 1 / -1;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(140, 140, 255, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.service-expanded-wrapper h3 {
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+}
+
+.exp-desc {
+    color: var(--text-light);
     margin-bottom: 1rem;
 }
 
-.service-header h3 {
-    color: var(--accent);
-    font-size: 1.3rem;
+.exp-steps ol,
+.exp-problems {
+    margin: 1rem 0;
 }
 
-.service-code {
-    background: var(--accent-light);
-    color: var(--accent);
-    padding: 0.3rem 0.8rem;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    border: 1px solid var(--accent-medium);
-}
-
-.service-description {
-    color: var(--text-light);
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-}
-
-.service-steps h4, .common-problems h4 {
-    color: var(--secondary);
-    margin-bottom: 0.8rem;
-    font-size: 1rem;
-}
-
-.service-steps ul {
-    list-style: none;
-    margin-bottom: 1.5rem;
-}
-
-.service-steps li {
-    color: var(--text-light);
-    margin-bottom: 0.5rem;
-    padding-left: 1rem;
-    position: relative;
-}
-
-.service-steps li::before {
-    content: '→';
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-weight: bold;
-}
-
-.problem-solution {
+.exp-problem-box {
     background: rgba(34, 197, 94, 0.05);
     border: 1px solid rgba(34, 197, 94, 0.2);
     border-radius: 8px;
@@ -90,6 +104,23 @@
     line-height: 1.5;
 }
 
-.problem-solution strong {
-    color: var(--success);
+/* Load More */
+.services-loadmore-container {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.services-loadmore-btn {
+    padding: 0.8rem 2rem;
+    background: var(--accent);
+    color: white;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.services-loadmore-btn:hover {
+    background: var(--accent-medium);
 }
