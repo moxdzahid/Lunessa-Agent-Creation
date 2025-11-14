@@ -89,7 +89,7 @@ function populateAgentInfo(agent) {
 }
 
 // ============================================================
-// SERVICES WITH PAGINATION + EXPAND (3×3 GRID)
+// Services Pagination + Expand (with Back Button)
 // ============================================================
 
 let currentServiceIndex = 0;
@@ -98,10 +98,11 @@ let currentServicesData = [];
 let currentServiceExpandedIndex = null;
 
 function populateServices(agent) {
-    currentServicesData = agent.agentBasicDetails.items || [];  
+    currentServicesData = agent.agentBasicDetails.items || [];
     renderServicesBatch(0);
 
     const loadMoreBtn = document.getElementById("servicesLoadMoreBtn");
+    const backBtn = document.getElementById("servicesBackBtn");
 
     if (loadMoreBtn) {
         loadMoreBtn.onclick = function () {
@@ -114,6 +115,24 @@ function populateServices(agent) {
             }
 
             renderServicesBatch(nextIndex);
+            backBtn.style.display = "inline-flex";
+        };
+    }
+
+    if (backBtn) {
+        backBtn.onclick = function () {
+            const prevIndex = currentServiceIndex - SERVICES_PER_PAGE;
+
+            if (prevIndex < 0) return;
+
+            renderServicesBatch(prevIndex);
+
+            loadMoreBtn.textContent = "Load More Services";
+            loadMoreBtn.disabled = false;
+
+            if (prevIndex === 0) {
+                backBtn.style.display = "none";
+            }
         };
     }
 }

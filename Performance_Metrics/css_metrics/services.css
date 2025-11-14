@@ -124,3 +124,25 @@
 .services-loadmore-btn:hover {
     background: var(--accent-medium);
 }
+
+.services-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.services-back-btn {
+    padding: 0.8rem 1.8rem;
+    background: rgba(120,120,255,0.15);
+    color: var(--accent);
+    font-weight: 600;
+    border: 1px solid var(--accent-medium);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.services-back-btn:hover {
+    background: rgba(120,120,255,0.25);
+}
